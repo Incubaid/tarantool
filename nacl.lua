@@ -16,7 +16,7 @@ print()
 -- decrypt:
 decrypted = nacl.box_open(encrypted, nonce, sender_pub, reciever_secret)
 
-print("decrypted")
+print("decrypted:")
 print(decrypted)
 print()
 
@@ -35,7 +35,7 @@ print()
 -- decrypt
 sb_decrypted = nacl.secretbox_open(sb_encrypted, nonce, key)
 
-print("secret box decrypted")
+print("secret box decrypted:")
 print(sb_decrypted)
 print()
 
@@ -54,6 +54,6 @@ print()
 -- verify
 verified = nacl.sign_open(signed, pk)
 
-print("verified")
+print("verified:")
 print (verified)
 print()
