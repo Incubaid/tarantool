@@ -77,23 +77,25 @@ function _M.decode_str(self, k, m, blocks, block_size, l_broken_ids, data_size)
 	end
 
 	-- broken ids
-	table.insert(l_broken_ids, -1) -- the C library need the array to be ended with -1
-	local broken_ids = ffi.cast("int *", ffi.C.malloc(4 * table.getn(l_broken_ids)))
-	for i=1, table.getn(l_broken_ids) do
-		broken_ids[i-1] = l_broken_ids[i]
+	local c_broken_ids = ffi.cast("int *", ffi.C.malloc(4 * (#l_broken_ids+1)))
+	for i=1, #l_broken_ids do
+		c_broken_ids[i-1] = l_broken_ids[i] -1
 	end
+	c_broken_ids[#l_broken_ids] = -1 -- the C library need the array to be ended with -1
 
-	data_ptrs = decode_c(k, m , data_ptrs, coding_ptrs, block_size, broken_ids)
-	local str = ""
-	for i=0, k-1 do
-		local temp = ffi.string(data_ptrs[i], block_size)
-		str = str .. temp
+
+	data_ptrs = decode_c(k, m , data_ptrs, coding_ptrs, block_size, c_broken_ids)
+
+	-- repair the broken blocks
+	for i, idx in pairs(l_broken_ids) do
+		blocks[idx] = ffi.string(data_ptrs[idx-1], block_size)
 	end
 
 	do_free(data_ptrs, k)
 	do_free(coding_ptrs, m)
 	ffi.C.free(broken_ids)
-	return str:sub(1, data_size)
+
+	return blocks
 end
 
 -- jerasure2 decode

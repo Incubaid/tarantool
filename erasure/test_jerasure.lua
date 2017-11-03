@@ -1,27 +1,36 @@
-local luajer = require("luajer")
+local luajer = require("jerasure")
 local ffi = require("ffi")
 
 local function test_encode_str(k, m)
 	-- initialize the data
-	local str = io.open("luajer.lua", "r"):read("*all")
+	local str = io.open("jerasure.lua", "r"):read("*all")
 
 	-- encode it
 	local blocks, block_size = luajer:encode_str(k, m, str)
 
 	-- corrupt the data
+	local ori_blocks = {}
+	ori_blocks[1] = blocks[1]
 	blocks[1] = ""
+
+	ori_blocks[2] = blocks[2]
 	blocks[2] = ""
 
+	local broken_idxs = {1, 2}
+
 	print("block_size = ", block_size)
+
 	-- decode it
-	local str_res = luajer:decode_str(k, m, blocks, block_size, {0, 1, -1}, string.len(str))
+	local recovered = luajer:decode_str(k, m, blocks, block_size, broken_idxs, string.len(str))
 
 	-- check data
-	if str ~= str_res then
-		print("not recovered")
-	else
-		print("Recovered!!!")
+	for k, v in pairs(broken_idxs) do
+		if recovered[v] ~= ori_blocks[v] then
+			print("not recovered")
+			return
+		end
 	end
+	print("RECOVERED")
 end
 
 local function the_test()
