@@ -22,7 +22,7 @@ local function test_encode_str(k, m)
 	print("block_size = ", block_size)
 
 	-- decode it
-	local recovered = luajer:decode(blocks, block_size, broken_idxs, string.len(str))
+	local recovered = luajer:decode(blocks)
 
 	-- check data
 	for k, v in pairs(broken_idxs) do

@@ -77,7 +77,19 @@ function _M.free(self)
 end
 
 -- decode table of Lua string and return back the recovered one
-function _M.decode(self, blocks, block_size, l_broken_ids, data_size)
+function _M.decode(self, blocks)
+	local block_size = 0
+
+	-- creates broken index table
+	local l_broken_ids = {}
+	for i = 1, #blocks do
+		if blocks[i] == "" then
+			table.insert(l_broken_ids, i)
+		else
+			block_size = #blocks[i]
+		end
+	end
+
 	-- copy the data
 	local data_ptrs = ffi.cast("char **", ffi.C.malloc(8 * self.K))
 	for i = 1, self.K do
