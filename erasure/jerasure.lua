@@ -76,8 +76,8 @@ function _M.free(self)
 	ffi.C.free(self.matrix)
 end
 
--- decode str and get back and str
-function _M.decode_str(self, blocks, block_size, l_broken_ids, data_size)
+-- decode table of Lua string and return back the recovered one
+function _M.decode(self, blocks, block_size, l_broken_ids, data_size)
 	-- copy the data
 	local data_ptrs = ffi.cast("char **", ffi.C.malloc(8 * self.K))
 	for i = 1, self.K do
@@ -116,7 +116,7 @@ end
 
 -- jerasure2 decode
 -- accept C data structures & return the lua one
-function _M.decode(self, data_ptrs, coding_ptrs, block_size, broken_ids)
+function _M.decode_tab(self, data_ptrs, coding_ptrs, block_size, broken_ids)
 	-- decode it
 	local result_ptrs = self:decode_c(data_ptrs, coding_ptrs, block_size, broken_ids)
 
@@ -165,8 +165,8 @@ function _M.encode_c(self, c_data, data_len)
 	return data_ptrs, coding_ptrs, block_size
 end
 
--- encode a string and return result as table of string
-function _M.encode_str(self, str)
+-- encode a Lua string and return result as table of string
+function _M.encode(self, str)
 	local data_len = string.len(str)
 	local c_data = ffi.cast("char*", ffi.C.malloc(data_len))
 	ffi.copy(c_data, str, string.len(str))
@@ -195,7 +195,7 @@ end
 
 -- encode a lua table and
 -- and return back C arrays
-function _M.encode(self, tdata)
+function _M.encode_tab(self, tdata)
 	local data_len = table.getn(tdata)
 	local c_data = ffi.new("char[?]", data_len, unpack(tdata))
 

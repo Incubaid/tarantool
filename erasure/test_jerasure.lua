@@ -7,7 +7,7 @@ local function test_encode_str(k, m)
 	local str = io.open("jerasure.lua", "r"):read("*all")
 
 	-- encode it
-	local blocks, block_size = luajer:encode_str(str)
+	local blocks, block_size = luajer:encode(str)
 
 	-- corrupt the data
 	local ori_blocks = {}
@@ -22,7 +22,7 @@ local function test_encode_str(k, m)
 	print("block_size = ", block_size)
 
 	-- decode it
-	local recovered = luajer:decode_str(blocks, block_size, broken_idxs, string.len(str))
+	local recovered = luajer:decode(blocks, block_size, broken_idxs, string.len(str))
 
 	-- check data
 	for k, v in pairs(broken_idxs) do
@@ -43,13 +43,13 @@ local function the_test(k, m)
 	end
 
 	-- encode it
-	local data_ptrs, coding_ptrs, block_size = luajer:encode(tdata)
+	local data_ptrs, coding_ptrs, block_size = luajer:encode_tab(tdata)
 
 	-- corrupt the data
 	data_ptrs[1] = ffi.cast("char *", ffi.C.malloc(block_size))
 
 	-- decode it
-	local tdata_res = luajer:decode(data_ptrs, coding_ptrs, block_size, ffi.new("int[2]", {1, -1}))
+	local tdata_res = luajer:decode_tab(data_ptrs, coding_ptrs, block_size, ffi.new("int[2]", {1, -1}))
 
 	-- check data
 	for i = 1, table.getn(tdata) do
