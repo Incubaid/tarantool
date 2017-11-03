@@ -1,12 +1,13 @@
-local luajer = require("jerasure")
+local jerasure = require("jerasure")
 local ffi = require("ffi")
 
 local function test_encode_str(k, m)
+	local luajer = jerasure.new(k, m)
 	-- initialize the data
 	local str = io.open("jerasure.lua", "r"):read("*all")
 
 	-- encode it
-	local blocks, block_size = luajer:encode_str(k, m, str)
+	local blocks, block_size = luajer:encode_str(str)
 
 	-- corrupt the data
 	local ori_blocks = {}
@@ -21,7 +22,7 @@ local function test_encode_str(k, m)
 	print("block_size = ", block_size)
 
 	-- decode it
-	local recovered = luajer:decode_str(k, m, blocks, block_size, broken_idxs, string.len(str))
+	local recovered = luajer:decode_str(blocks, block_size, broken_idxs, string.len(str))
 
 	-- check data
 	for k, v in pairs(broken_idxs) do
@@ -33,7 +34,8 @@ local function test_encode_str(k, m)
 	print("RECOVERED")
 end
 
-local function the_test()
+local function the_test(k, m)
+	local luajer = jerasure.new(k, m)
 	-- initialize the data
 	local tdata = {}
 	for i = 1, (15 * 10) do
@@ -41,13 +43,13 @@ local function the_test()
 	end
 
 	-- encode it
-	local data_ptrs, coding_ptrs, block_size = luajer:encode(16, 4, tdata)
+	local data_ptrs, coding_ptrs, block_size = luajer:encode(tdata)
 
 	-- corrupt the data
 	data_ptrs[1] = ffi.cast("char *", ffi.C.malloc(block_size))
 
 	-- decode it
-	local tdata_res = luajer:decode(16, 4, data_ptrs, coding_ptrs, block_size, ffi.new("int[2]", {1, -1}))
+	local tdata_res = luajer:decode(data_ptrs, coding_ptrs, block_size, ffi.new("int[2]", {1, -1}))
 
 	-- check data
 	for i = 1, table.getn(tdata) do
@@ -60,7 +62,8 @@ local function the_test()
 	print("Recovered!!!")
 end
 
---the_test()
+the_test(4, 2)
+print("test encode_str")
 test_encode_str(4, 2)
 
 
