@@ -1,6 +1,4 @@
-package.path = './?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua;/usr/share/lua/5.1/?.lua;/usr/share/lua/5.1/?/init.lua;' .. ';' ..package.path
-
-package.cpath = ' ./?.so;/home/ahmed/.luarocks/lib/lua/5.1/?.so;/home/ahmed/.luarocks/lib/lua/?.so;/usr/local/lib/x86_64-linux-gnu/tarantool/?.so;/usr/lib/x86_64-linux-gnu/tarantool/?.so;/usr/local/lib/tarantool/?.so;/usr/local/lib/x86_64-linux-gnu/lua/5.1/?.so;/usr/lib/x86_64-linux-gnu/lua/5.1/?.so;/usr/local/lib/lua/5.1/?.so;'..package.cpath
+package.loaded['socket'] = nil
 
 local pretty = require 'pl.pretty'
 local function slurp(path)
