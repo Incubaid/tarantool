@@ -33,13 +33,13 @@ if res.status == 200 then
 end
 
 
--- todo:create_todo{payload={title="new todo awii", done=true}}
 
 
-local res = todo:update_todo{id=20, payload={title="oufff!", done=false}}
+local res = todo:update_todo{id=1, payload={title="oufff!", done=false}}
 pretty.dump(res.body)
 
 
+--todo:create_todo{payload={title="new todo awii", done=true}}
 local res = todo:list_todos()
 if res.status == 200 then   
     for i=0, #res.body do
