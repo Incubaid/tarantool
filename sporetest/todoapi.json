@@ -1,0 +1,55 @@
+{
+    "base_url" : "http://localhost:5000/api/v1",
+    "version" : "0.02",
+    "methods" : {
+       "list_todos" : {
+          "expected_status" : [
+             "200"
+          ],
+          "path" : "/todos",
+          "method" : "GET"
+        },
+        "view_todo" : {
+            "required_params" : [
+                "id"
+            ],
+            "expected_status" : [
+                "200"
+            ],
+            "path" : "/todos/:id",
+            "method" : "GET"
+         },
+         "create_todo" : {
+            "required_payload" : [
+                "title", "done"
+            ],
+            "expected_status" : [
+                ["201", "200"]
+            ],
+            "path" : "/todos",
+            "method" : "POST"
+         },
+         "update_todo" : {
+            "required_params" : [
+                "id"
+            ],
+            "required_payload": [
+                "title", "done"
+            ],
+            "expected_status" : [
+                "200", "201"
+            ],
+            "path" : "/todos/:id",
+            "method" : "PATCH"
+         }
+    },
+
+    "formats" : [
+       "json"
+    ],
+    "name" : "todowhat",
+    "authority" : "http://github.com/SPORE",
+    "meta" : {
+       "documentation" : "http://dmdm.com/"
+    }
+ }
