@@ -10,6 +10,10 @@ prefab.db.tarantool.install()
 > sevm is node name
 >This will install tarantool, luarocks, redis-lua, yaml, penlight, luasec, shard, document, prometheus, queue, expirationd, connpool, http, lua-cjson
 
+## Sandbox
+
+- work in progress but see in https://github.com/Jumpscale/sandbox_osx/tree/master/sandbox
+
 ## Erasure Encoding
 
 Check [erasure](./erasure) directory.
